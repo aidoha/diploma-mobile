@@ -17,10 +17,10 @@ export default function App(props) {
   } else {
     return (
       <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
+        {Platform.OS === 'ios' && <StatusBar barStyle='dark-content' />}
         <NavigationContainer linking={LinkingConfiguration}>
           <Stack.Navigator>
-            <Stack.Screen name="Root" component={BottomTabNavigator} />
+            <Stack.Screen name='Root' component={BottomTabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>
