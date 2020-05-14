@@ -16,6 +16,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
+import CompanyList from './screens/CompanyListScreen';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -37,6 +38,7 @@ export default function App(props) {
           <NavigationContainer linking={LinkingConfiguration}>
             <Stack.Navigator>
               <Stack.Screen name='Root' component={BottomTabNavigator} />
+              <Stack.Screen name='CompanyList' component={CompanyList} />
             </Stack.Navigator>
           </NavigationContainer>
         </View>
