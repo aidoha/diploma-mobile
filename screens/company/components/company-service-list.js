@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { validPrice } from '../../../utils';
 
 const CompanyServices = ({ data }) => {
   return (
@@ -38,7 +39,7 @@ const CompanyServices = ({ data }) => {
                   </Text>
                   <Text style={[styles.text, { fontSize: 16 }]}>
                     {' '}
-                    {companyServicePrice}
+                    {validPrice(companyServicePrice)} ₸
                   </Text>
                 </View>
                 <View style={styles.row}>
