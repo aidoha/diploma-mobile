@@ -20,7 +20,9 @@ const CompanyServices = ({ data }) => {
             <TouchableOpacity key={companyServiceID}>
               <View style={styles.company}>
                 <View style={styles.row}>
-                  <Text style={[styles.text, { fontSize: 20 }]}>
+                  <Text
+                    style={[styles.text, { fontSize: 20, fontWeight: '600' }]}
+                  >
                     Название компании:
                   </Text>
                   <Text style={[styles.text, { fontSize: 20 }]}>
@@ -29,14 +31,20 @@ const CompanyServices = ({ data }) => {
                   </Text>
                 </View>
                 <View style={styles.row}>
-                  <Text style={[styles.text, { fontSize: 16 }]}>Цена:</Text>
+                  <Text
+                    style={[styles.text, { fontSize: 16, fontWeight: '600' }]}
+                  >
+                    Цена:
+                  </Text>
                   <Text style={[styles.text, { fontSize: 16 }]}>
                     {' '}
                     {companyServicePrice}
                   </Text>
                 </View>
                 <View style={styles.row}>
-                  <Text style={[styles.text, { fontSize: 16 }]}>
+                  <Text
+                    style={[styles.text, { fontSize: 16, fontWeight: '600' }]}
+                  >
                     Время работы:
                   </Text>
                   <Text style={[styles.text, { fontSize: 16 }]}>
