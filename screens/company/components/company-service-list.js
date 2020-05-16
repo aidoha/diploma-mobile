@@ -24,7 +24,7 @@ const CompanyServices = ({ data }) => {
                   <Text
                     style={[styles.text, { fontSize: 20, fontWeight: '600' }]}
                   >
-                    Название компании:
+                    Название услуги:
                   </Text>
                   <Text style={[styles.text, { fontSize: 20 }]}>
                     {' '}
