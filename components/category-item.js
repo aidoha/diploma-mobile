@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { width } from '../constants/Layout';
 
 const CategoryItem = ({ navigation, category }) => {
-  console.log('==>', category);
-
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('CompanyList', category)}
@@ -47,25 +46,25 @@ export default CategoryItem;
 
 const styles = StyleSheet.create({
   category_item: {
-    justifyContent: 'space-between',
+    width: width * 0.4,
+    height: 100,
+    justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 50,
-    backgroundColor: '#fff',
-    padding: 30,
-    borderRadius: 20,
-    borderColor: '#7654ff',
+    marginTop: 20,
+    backgroundColor: '#333',
+    padding: 10,
+    borderRadius: (width * 0.4) / 2,
+    borderColor: '#333',
     borderWidth: 1,
   },
   category_item_text: {
-    color: '#7654ff',
+    color: '#fff',
     textTransform: 'uppercase',
     fontWeight: '500',
   },
   category_item_logo: {
     width: 30,
     height: 30,
+    marginTop: 10,
   },
 });

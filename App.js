@@ -16,7 +16,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
-import CompanyList from './screens/CompanyListScreen';
+import CompanyList from './screens/company-list/CompanyListScreen';
+import Company from './screens/company/CompanyScreen';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -25,7 +26,7 @@ const client = new ApolloClient({
 });
 const Stack = createStackNavigator();
 
-export default function App(props) {
+export default function App() {
   const isLoadingComplete = useCachedResources();
 
   if (!isLoadingComplete) {
@@ -34,11 +35,12 @@ export default function App(props) {
     return (
       <ApolloProvider client={client}>
         <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle='dark-content' />}
+          {Platform.OS === 'ios' && <StatusBar barStyle='light-content' />}
           <NavigationContainer linking={LinkingConfiguration}>
             <Stack.Navigator>
               <Stack.Screen name='Root' component={BottomTabNavigator} />
               <Stack.Screen name='CompanyList' component={CompanyList} />
+              <Stack.Screen name='Company' component={Company} />
             </Stack.Navigator>
           </NavigationContainer>
         </View>

@@ -2,42 +2,35 @@ import * as React from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
-import CategoryItem from '../components/category-item';
-
-const GET_BUSINESS_CATEGORIES = gql`
-  query getCategories {
-    getBusinessCategories {
-      businessCategoryID
-      businessCategoryName
-    }
-  }
-`;
+import { GET_BUSINESS_CATEGORIES } from '../../queries/catalog';
+import CategoryItem from '../../components/category-item';
 
 export default function CatalogScreen(props) {
   const { data, loading } = useQuery(GET_BUSINESS_CATEGORIES);
 
-  if (loading)
+  if (loading) {
     return (
       <View style={styles.horizontal}>
         <ActivityIndicator size='large' color='#7654ff' />
       </View>
     );
+  }
+
   return (
     <View style={styles.container}>
-      <ScrollView
+      {/* <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
-      >
-        {!loading &&
-          data?.getBusinessCategories.map((category) => (
-            <CategoryItem
-              key={category.businessCategoryID}
-              category={category}
-              {...props}
-            />
-          ))}
-      </ScrollView>
+      > */}
+      {!loading &&
+        data?.getBusinessCategories.map((category) => (
+          <CategoryItem
+            key={category.businessCategoryID}
+            category={category}
+            {...props}
+          />
+        ))}
+      {/* </ScrollView> */}
     </View>
   );
 }
@@ -51,6 +44,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   horizontal: {
     flex: 1,
