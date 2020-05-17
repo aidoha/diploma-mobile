@@ -1,7 +1,9 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
+import { useQuery } from '@apollo/react-hooks';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import DatePicker from 'react-native-datepicker';
+import { formatISO } from 'date-fns';
 import {
   reducer as orderStateReducer,
   initialState,
@@ -10,12 +12,37 @@ import {
   clientNameHandler,
   clientPhoneHandler,
   dateHandler,
+  getAvailableHoursHandler,
 } from '../../../states/order/actions';
 import { width } from '../../../constants/Layout';
+import {
+  GET_ORDER_AVAILABLE_HOURS,
+  CREATE_BUSINESS_SERVICE_ORDER,
+} from '../../../queries/order';
+import { parseDate } from '../../../utils';
 
-const OrderForm = () => {
+const OrderForm = ({ companyServiceID }) => {
+  const [isDateChanged, setIsDateChanged] = useState(false);
   const [orderState, dispatch] = useReducer(orderStateReducer, initialState);
-  console.log(orderState);
+
+  const { data, loading, error } = useQuery(GET_ORDER_AVAILABLE_HOURS, {
+    variables: {
+      businessServiceID: companyServiceID,
+      date: parseDate(orderState.date),
+    },
+    skip: !isDateChanged,
+  });
+
+  useEffect(() => {
+    if (data) {
+      dispatch(
+        getAvailableHoursHandler(
+          data?.getCompanyAvailableHoursByDate?.availableHour
+        )
+      );
+    }
+  }, [isDateChanged, data]);
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -58,8 +85,19 @@ const OrderForm = () => {
             color: '#000',
           },
         }}
-        onDateChange={(date) => dispatch(dateHandler(date))}
+        onDateChange={(date) => {
+          dispatch(dateHandler(date));
+          setIsDateChanged(true);
+        }}
       />
+      {!error &&
+        orderState.availableHours &&
+        orderState.availableHours.length !== 0 &&
+        orderState.availableHours.map((item) => (
+          <View>
+            <Text>{item}</Text>
+          </View>
+        ))}
     </View>
   );
 };

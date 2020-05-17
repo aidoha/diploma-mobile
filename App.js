@@ -21,6 +21,7 @@ import Company from './screens/company/CompanyScreen';
 import Order from './screens/order/OrderScreen';
 
 YellowBox.ignoreWarnings(['Remote debugger']);
+console.disableYellowBox = true;
 const cache = new InMemoryCache();
 const client = new ApolloClient({
   uri: 'http://46.101.138.224:8080/query',

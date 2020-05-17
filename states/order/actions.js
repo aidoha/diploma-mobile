@@ -1,4 +1,9 @@
-import { UPDATE_CLIENT_NAME, UPDATE_CLIENT_PHONE, UPDATE_DATE } from './types';
+import {
+  UPDATE_CLIENT_NAME,
+  UPDATE_CLIENT_PHONE,
+  UPDATE_DATE,
+  UPDATE_AVAILABLE_HOURS,
+} from './types';
 
 export const clientNameHandler = (name = '') => {
   return {
@@ -16,5 +21,11 @@ export const dateHandler = (date = '') => {
   return {
     type: UPDATE_DATE,
     payload: date,
+  };
+};
+export const getAvailableHoursHandler = (hours = []) => {
+  return {
+    type: UPDATE_AVAILABLE_HOURS,
+    payload: hours,
   };
 };

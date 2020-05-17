@@ -39,7 +39,7 @@ const OrderScreen = ({ navigation, route }) => {
       keyboardShouldPersistTaps='handled'
     >
       <ServiceDetails data={data?.getCompanyService} />
-      <OrderForm />
+      <OrderForm companyServiceID={companyServiceID} />
     </ScrollView>
   );
 };
