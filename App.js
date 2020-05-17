@@ -18,6 +18,7 @@ import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
 import CompanyList from './screens/company-list/CompanyListScreen';
 import Company from './screens/company/CompanyScreen';
+import Order from './screens/order/OrderScreen';
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
@@ -41,6 +42,7 @@ export default function App() {
               <Stack.Screen name='Root' component={BottomTabNavigator} />
               <Stack.Screen name='CompanyList' component={CompanyList} />
               <Stack.Screen name='Company' component={Company} />
+              <Stack.Screen name='Order' component={Order} />
             </Stack.Navigator>
           </NavigationContainer>
         </View>

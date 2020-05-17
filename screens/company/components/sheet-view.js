@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { height } from '../../../constants/Layout';
 
-const SheetView = ({ refRBSheet, handleSheetView, services }) => {
+const SheetView = ({ refRBSheet, handleSheetView, services, navigation }) => {
   const [activeService, setActiveService] = useState(null);
 
   const handleActiveService = (index) => {
@@ -32,12 +32,12 @@ const SheetView = ({ refRBSheet, handleSheetView, services }) => {
           contentContainerStyle={styles.contentScrollview}
         >
           {services &&
-            services.map((item, index) => {
+            services.map((item) => {
               const { companyServiceID, companyServiceName } = item;
               return (
                 <TouchableOpacity
                   key={companyServiceID}
-                  onPress={() => handleActiveService(index)}
+                  onPress={() => handleActiveService(companyServiceID)}
                 >
                   <View style={styles.service}>
                     <Text>{companyServiceName}</Text>
@@ -47,7 +47,9 @@ const SheetView = ({ refRBSheet, handleSheetView, services }) => {
                           styles.checkbox_inner,
                           {
                             backgroundColor:
-                              activeService === index ? '#000' : '#fff',
+                              activeService === companyServiceID
+                                ? '#000'
+                                : '#fff',
                           },
                         ]}
                       />
@@ -58,7 +60,13 @@ const SheetView = ({ refRBSheet, handleSheetView, services }) => {
             })}
         </ScrollView>
         {activeService && (
-          <TouchableOpacity style={styles.button_choose}>
+          <TouchableOpacity
+            style={styles.button_choose}
+            onPress={() => {
+              navigation.navigate('Order', { companyServiceID: activeService });
+              refRBSheet.current.close();
+            }}
+          >
             <Text style={styles.button_choose_text}>выбрать</Text>
           </TouchableOpacity>
         )}

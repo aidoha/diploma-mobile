@@ -40,7 +40,13 @@ export default function CompanyScreen({ route, navigation }) {
   };
 
   const renderScene = SceneMap({
-    first: () => <CompanyInfo data={route.params} refRBSheet={refRBSheet} />,
+    first: () => (
+      <CompanyInfo
+        data={route.params}
+        refRBSheet={refRBSheet}
+        handleSheetView={handleSheetView}
+      />
+    ),
     second: () => (
       <CompanyServices
         data={data?.getBusinessCompanyServices?.businessCompanyService}
@@ -80,7 +86,9 @@ export default function CompanyScreen({ route, navigation }) {
       />
       <SheetView
         refRBSheet={refRBSheet}
+        sheetView={sheetView}
         handleSheetView={handleSheetView}
+        navigation={navigation}
         services={data?.getBusinessCompanyServices?.businessCompanyService}
       />
     </View>
@@ -94,7 +102,7 @@ CompanyScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f3f6fa',
   },
   horizontal: {
     flex: 1,
