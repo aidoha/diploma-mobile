@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/react-hooks';
 import ServiceDetails from './components/service-details';
+import OrderForm from './components/order-form';
 import { GET_COMPANY_SERVCE } from '../../queries/order';
 
 const OrderScreen = ({ navigation, route }) => {
@@ -31,9 +33,14 @@ const OrderScreen = ({ navigation, route }) => {
   if (!data) return;
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      keyboardShouldPersistTaps='handled'
+    >
       <ServiceDetails data={data?.getCompanyService} />
-    </View>
+      <OrderForm />
+    </ScrollView>
   );
 };
 
@@ -42,9 +49,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f3f6fa',
   },
+  contentContainer: {},
   horizontal: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f3f6fa',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

@@ -7,8 +7,8 @@ import {
   StyleSheet,
   View,
   AppRegistry,
+  YellowBox,
 } from 'react-native';
-// import { ApolloClient } from 'apollo-client';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -20,6 +20,7 @@ import CompanyList from './screens/company-list/CompanyListScreen';
 import Company from './screens/company/CompanyScreen';
 import Order from './screens/order/OrderScreen';
 
+YellowBox.ignoreWarnings(['Remote debugger']);
 const cache = new InMemoryCache();
 const client = new ApolloClient({
   uri: 'http://46.101.138.224:8080/query',
