@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import DatePicker from 'react-native-datepicker';
+import AvailableHour from './available-hour';
 import { formatISO } from 'date-fns';
 import {
   reducer as orderStateReducer,
@@ -25,7 +26,11 @@ const OrderForm = ({ companyServiceID }) => {
   const [isDateChanged, setIsDateChanged] = useState(false);
   const [orderState, dispatch] = useReducer(orderStateReducer, initialState);
 
-  const { data, loading, error } = useQuery(GET_ORDER_AVAILABLE_HOURS, {
+  const {
+    data: dataAvailableHours,
+    loading: loadingAvailableHours,
+    error: errorAvailableHours,
+  } = useQuery(GET_ORDER_AVAILABLE_HOURS, {
     variables: {
       businessServiceID: companyServiceID,
       date: parseDate(orderState.date),
@@ -34,14 +39,16 @@ const OrderForm = ({ companyServiceID }) => {
   });
 
   useEffect(() => {
-    if (data) {
+    if (dataAvailableHours) {
       dispatch(
         getAvailableHoursHandler(
-          data?.getCompanyAvailableHoursByDate?.availableHour
+          dataAvailableHours?.getCompanyAvailableHoursByDate?.availableHour
         )
       );
     }
-  }, [isDateChanged, data]);
+  }, [isDateChanged, dataAvailableHours]);
+
+  // console.log(orderState.availableHours);
 
   return (
     <View style={styles.container}>
@@ -90,14 +97,14 @@ const OrderForm = ({ companyServiceID }) => {
           setIsDateChanged(true);
         }}
       />
-      {!error &&
-        orderState.availableHours &&
-        orderState.availableHours.length !== 0 &&
-        orderState.availableHours.map((item) => (
-          <View>
-            <Text>{item}</Text>
-          </View>
-        ))}
+      <View style={styles.availableHours_container}>
+        {!errorAvailableHours &&
+          orderState.availableHours &&
+          orderState.availableHours.length !== 0 &&
+          orderState.availableHours.map((item, index) => (
+            <AvailableHour key={index} data={item} />
+          ))}
+      </View>
     </View>
   );
 };
@@ -121,6 +128,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     width: width * 0.8,
+  },
+  availableHours_container: {
+    flex: 1,
+    width: '100%',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 
