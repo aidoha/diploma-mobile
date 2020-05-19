@@ -8,6 +8,7 @@ const CompanyServices = ({ data }) => {
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
+      showsHorizontalScrollIndicator={false}
     >
       {data &&
         data.map((item) => {

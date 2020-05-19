@@ -1,10 +1,14 @@
 import React, { useReducer, useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import DatePicker from 'react-native-datepicker';
 import AvailableHour from './available-hour';
-import { formatISO } from 'date-fns';
 import {
   reducer as orderStateReducer,
   initialState,
@@ -23,6 +27,7 @@ import {
 import { parseDate } from '../../../utils';
 
 const OrderForm = ({ companyServiceID }) => {
+  const [activeHour, setActiveHour] = useState(null);
   const [isDateChanged, setIsDateChanged] = useState(false);
   const [orderState, dispatch] = useReducer(orderStateReducer, initialState);
 
@@ -48,8 +53,7 @@ const OrderForm = ({ companyServiceID }) => {
     }
   }, [isDateChanged, dataAvailableHours]);
 
-  // console.log(orderState.availableHours);
-
+  console.log(orderState);
   return (
     <View style={styles.container}>
       <TextInput
@@ -102,10 +106,24 @@ const OrderForm = ({ companyServiceID }) => {
           orderState.availableHours &&
           orderState.availableHours.length !== 0 &&
           orderState.availableHours.map((item, index) => (
-            <AvailableHour key={index} data={item} />
+            <AvailableHour
+              key={index}
+              index={index}
+              hour={{ activeHour, setActiveHour }}
+              data={item}
+              dispatch={dispatch}
+            />
           ))}
       </View>
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => dispatch(clientNameHandler(text))}
+        value={orderState.name}
+        placeholder='Комментарий'
+        multiline
+      />
     </View>
+    // </KeyboardAvoidingView>
   );
 };
 

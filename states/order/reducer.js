@@ -3,6 +3,7 @@ import {
   UPDATE_CLIENT_PHONE,
   UPDATE_DATE,
   UPDATE_AVAILABLE_HOURS,
+  CHOOSE_AVAILABLE_HOUR,
 } from './types';
 
 export const initialState = {
@@ -30,6 +31,11 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         date: action.payload,
+      };
+    case CHOOSE_AVAILABLE_HOUR:
+      return {
+        ...state,
+        availableHour: action.payload,
       };
     case UPDATE_AVAILABLE_HOURS:
       return {

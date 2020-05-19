@@ -1,5 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/react-hooks';
 import ServiceDetails from './components/service-details';
@@ -33,20 +38,25 @@ const OrderScreen = ({ navigation, route }) => {
   if (!data) return;
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-      keyboardShouldPersistTaps='handled'
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={64}
     >
-      <ServiceDetails data={data?.getCompanyService} />
-      <OrderForm companyServiceID={companyServiceID} />
-    </ScrollView>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        showsHorizontalScrollIndicator={false}
+      >
+        <ServiceDetails data={data?.getCompanyService} />
+        <OrderForm companyServiceID={companyServiceID} />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#f3f6fa',
   },
   contentContainer: {},

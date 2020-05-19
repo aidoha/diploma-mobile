@@ -40,6 +40,7 @@ export default function CompanyListScreen({ route, navigation }) {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
+        showsHorizontalScrollIndicator={false}
       >
         {!loading &&
           data?.getBusinessCompaniesUnderCategory?.businessCompanies.map(

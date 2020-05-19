@@ -1,14 +1,33 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { format } from 'date-fns';
-import { jsCoreDateCreator } from '../../../utils';
+import { selectAvailableHour } from '../../../states/order/actions';
+import { jsCoreDateCreator, convertUTCDateToLocalDate } from '../../../utils';
 
-const AvailableHour = ({ data }) => {
+const AvailableHour = ({ data, index, dispatch, hour }) => {
   const time = format(new Date(jsCoreDateCreator(data)), 'HH:mm');
+  const convertedTime = convertUTCDateToLocalDate(
+    new Date(jsCoreDateCreator(data))
+  );
+  const isIndexEqual = hour.activeHour === index;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.time_text}>{time}</Text>
-    </View>
+    <TouchableOpacity
+      style={[
+        styles.container,
+        { backgroundColor: isIndexEqual ? '#fff' : '#000' },
+      ]}
+      onPress={() => {
+        dispatch(selectAvailableHour(convertedTime));
+        hour.setActiveHour(index);
+      }}
+    >
+      <Text
+        style={[styles.time_text, { color: isIndexEqual ? '#000' : '#fff' }]}
+      >
+        {time}
+      </Text>
+    </TouchableOpacity>
   );
 };
 
@@ -20,6 +39,8 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     alignItems: 'center',
+    borderColor: '#000',
+    borderWidth: 1,
   },
   time_text: {
     color: '#fff',

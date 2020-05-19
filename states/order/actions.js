@@ -3,6 +3,7 @@ import {
   UPDATE_CLIENT_PHONE,
   UPDATE_DATE,
   UPDATE_AVAILABLE_HOURS,
+  CHOOSE_AVAILABLE_HOUR,
 } from './types';
 
 export const clientNameHandler = (name = '') => {
@@ -27,5 +28,11 @@ export const getAvailableHoursHandler = (hours = []) => {
   return {
     type: UPDATE_AVAILABLE_HOURS,
     payload: hours,
+  };
+};
+export const selectAvailableHour = (hour = '') => {
+  return {
+    type: CHOOSE_AVAILABLE_HOUR,
+    payload: hour,
   };
 };
