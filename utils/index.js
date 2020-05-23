@@ -3,6 +3,14 @@ export const validPrice = (price) =>
 
 export const parseDate = (date) => date.split('.').reverse().join('-');
 
+export const parsePhone = (phone = '') => {
+  return phone
+    .split('')
+    .filter((x) => x !== ' ')
+    .splice(2, phone.length)
+    .join('');
+};
+
 export const jsCoreDateCreator = (dateString) => {
   let dateParam = dateString.split(/[\s-:]/);
   dateParam[1] = (parseInt(dateParam[1], 10) - 1).toString();

@@ -49,7 +49,10 @@ const OrderScreen = ({ navigation, route }) => {
         showsHorizontalScrollIndicator={false}
       >
         <ServiceDetails data={data?.getCompanyService} />
-        <OrderForm companyServiceID={companyServiceID} />
+        <OrderForm
+          companyServiceID={companyServiceID}
+          navigation={navigation}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

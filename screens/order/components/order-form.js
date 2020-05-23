@@ -1,10 +1,13 @@
 import React, { useReducer, useState, useEffect } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import {
   View,
   TextInput,
   StyleSheet,
-  KeyboardAvoidingView,
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 import DatePicker from 'react-native-datepicker';
@@ -16,6 +19,7 @@ import {
 import {
   clientNameHandler,
   clientPhoneHandler,
+  clientCommentHandler,
   dateHandler,
   getAvailableHoursHandler,
 } from '../../../states/order/actions';
@@ -24,9 +28,9 @@ import {
   GET_ORDER_AVAILABLE_HOURS,
   CREATE_BUSINESS_SERVICE_ORDER,
 } from '../../../queries/order';
-import { parseDate } from '../../../utils';
+import { parseDate, parsePhone } from '../../../utils';
 
-const OrderForm = ({ companyServiceID }) => {
+const OrderForm = ({ companyServiceID, navigation }) => {
   const [activeHour, setActiveHour] = useState(null);
   const [isDateChanged, setIsDateChanged] = useState(false);
   const [orderState, dispatch] = useReducer(orderStateReducer, initialState);
@@ -42,6 +46,45 @@ const OrderForm = ({ companyServiceID }) => {
     },
     skip: !isDateChanged,
   });
+  const [createBusinessServiceOrder] = useMutation(
+    CREATE_BUSINESS_SERVICE_ORDER
+  );
+
+  const showConfirmAlert = () => {
+    Alert.alert('Подтвердите свою запись', '', [
+      {
+        text: 'Отменить',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      { text: 'Подтвердить', onPress: () => onSubmit() },
+    ]);
+  };
+
+  const onSubmit = () => {
+    const obj = {
+      businessServiceID: companyServiceID,
+      startAt: orderState.availableHour,
+      clientFirstName: orderState.name,
+      clientPhoneNumber: parsePhone(orderState.phone),
+      clientPhoneNumberPrefix: '+7',
+      clientCommentary: orderState.comment,
+    };
+
+    createBusinessServiceOrder({ variables: obj })
+      .then((res) => {
+        if (res.data) {
+          Alert.alert(`${orderState.name}, Ваш заказ принят!`, '', [
+            { text: 'Ок', onPress: () => navigation.navigate('Root') },
+          ]);
+        }
+      })
+      .catch(() => {
+        Alert.alert('Упс, произошла ошибка!', 'Попробуйте позже', [
+          { text: 'Ок', onPress: () => navigation.navigate('Root') },
+        ]);
+      });
+  };
 
   useEffect(() => {
     if (dataAvailableHours) {
@@ -53,7 +96,6 @@ const OrderForm = ({ companyServiceID }) => {
     }
   }, [isDateChanged, dataAvailableHours]);
 
-  console.log(orderState);
   return (
     <View style={styles.container}>
       <TextInput
@@ -102,6 +144,14 @@ const OrderForm = ({ companyServiceID }) => {
         }}
       />
       <View style={styles.availableHours_container}>
+        {loadingAvailableHours && (
+          <ActivityIndicator size='large' color='#7654ff' />
+        )}
+        {errorAvailableHours && (
+          <View>
+            <Text>Упс, услуга в это время недоступна</Text>
+          </View>
+        )}
         {!errorAvailableHours &&
           orderState.availableHours &&
           orderState.availableHours.length !== 0 &&
@@ -117,13 +167,35 @@ const OrderForm = ({ companyServiceID }) => {
       </View>
       <TextInput
         style={styles.input}
-        onChangeText={(text) => dispatch(clientNameHandler(text))}
-        value={orderState.name}
+        onChangeText={(text) => dispatch(clientCommentHandler(text))}
+        value={orderState.comment}
         placeholder='Комментарий'
         multiline
       />
+      <View style={styles.button_wrapper}>
+        <TouchableOpacity
+          style={
+            !orderState.name ||
+            !orderState.phone ||
+            !orderState.date ||
+            !orderState.availableHour ||
+            !orderState.comment
+              ? styles.button_disabled
+              : styles.button
+          }
+          onPress={showConfirmAlert}
+          disabled={
+            !orderState.name ||
+            !orderState.phone ||
+            !orderState.date ||
+            !orderState.availableHour ||
+            !orderState.comment
+          }
+        >
+          <Text style={styles.button_text}>Записаться</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-    // </KeyboardAvoidingView>
   );
 };
 
@@ -154,6 +226,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  button_wrapper: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'stretch',
+  },
+  button_disabled: {
+    marginBottom: 30,
+    marginTop: 30,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: 'grey',
+    alignItems: 'center',
+  },
+  button: {
+    marginBottom: 30,
+    marginTop: 30,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#000',
+    alignItems: 'center',
+  },
+  button_text: {
+    color: '#fff',
+    textTransform: 'uppercase',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

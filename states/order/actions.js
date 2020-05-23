@@ -1,6 +1,7 @@
 import {
   UPDATE_CLIENT_NAME,
   UPDATE_CLIENT_PHONE,
+  UPDATE_CLIENT_COMMENT,
   UPDATE_DATE,
   UPDATE_AVAILABLE_HOURS,
   CHOOSE_AVAILABLE_HOUR,
@@ -16,6 +17,12 @@ export const clientPhoneHandler = (phone = '') => {
   return {
     type: UPDATE_CLIENT_PHONE,
     payload: phone,
+  };
+};
+export const clientCommentHandler = (comment = '') => {
+  return {
+    type: UPDATE_CLIENT_COMMENT,
+    payload: comment,
   };
 };
 export const dateHandler = (date = '') => {
