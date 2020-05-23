@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import * as SecureStore from 'expo-secure-store';
 import {
   View,
   Text,
@@ -9,13 +10,17 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TextInput,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
+import { useMutation } from '@apollo/react-hooks';
 import { usernameHandler, passwordHandler } from '../../states/sign-in/actions';
 import {
   initialState,
   reducer as signInReducer,
 } from '../../states/sign-in/reducer';
 import { width } from '../../constants/Layout';
+import { CUSTOMER_SIGN_IN } from '../../queries/auth';
 
 const navigationObj = {
   headerTitle: 'Войти',
@@ -30,8 +35,37 @@ const SignInScreen = ({ navigation, route }) => {
   navigation.setOptions(navigationObj);
   const [signInState, dispatch] = useReducer(signInReducer, initialState);
   const { username, password } = signInState;
+  const [getCustomerToken, { loading, error }] = useMutation(CUSTOMER_SIGN_IN);
 
-  const signIn = () => {};
+  const onSubmit = () => {
+    getCustomerToken({
+      variables: {
+        email: username,
+        password,
+      },
+    })
+      .then(async (res) => {
+        if (res.data) {
+          await SecureStore.setItemAsync(
+            'token',
+            res.data.createCustomerToken.token.accessToken
+          );
+        }
+      })
+      .catch((err) => {
+        Alert.alert('Упс, произошла ошибка!', 'Попробуйте позже', [
+          { text: 'Ок', onPress: () => console.log('auth err', err) },
+        ]);
+      });
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.horizontal}>
+        <ActivityIndicator size='large' color='#000000' />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -58,7 +92,7 @@ const SignInScreen = ({ navigation, route }) => {
               style={
                 !username || !password ? styles.button_disabled : styles.button
               }
-              onPress={signIn}
+              onPress={onSubmit}
               disabled={!username || !password}
             >
               <Text style={styles.button_text}>Войти</Text>
@@ -81,6 +115,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f3f6fa',
+  },
+  horizontal: {
+    flex: 1,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   form: {
     flex: 1,

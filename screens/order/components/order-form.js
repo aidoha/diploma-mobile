@@ -145,7 +145,7 @@ const OrderForm = ({ companyServiceID, navigation }) => {
       />
       <View style={styles.availableHours_container}>
         {loadingAvailableHours && (
-          <ActivityIndicator size='large' color='#7654ff' />
+          <ActivityIndicator size='large' color='#000000' />
         )}
         {errorAvailableHours && (
           <View>

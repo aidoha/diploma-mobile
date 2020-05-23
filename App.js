@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import * as SecureStore from 'expo-secure-store';
 import {
   Platform,
   StatusBar,
@@ -8,7 +9,6 @@ import {
   View,
   AppRegistry,
   YellowBox,
-  AsyncStorage,
 } from 'react-native';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -34,14 +34,15 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  let token;
+  const [token, setToken] = useState(null);
   useEffect(() => {
     const getToken = async () => {
-      token = await AsyncStorage.getItem('token');
+      let result = await SecureStore.getItemAsync('token');
+      setToken(result);
     };
     getToken();
-  }, [token]);
-  // console.log('token', token);
+  }, []);
+  console.log('token', token);
 
   if (!isLoadingComplete) {
     return null;

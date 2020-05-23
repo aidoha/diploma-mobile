@@ -30,7 +30,7 @@ const OrderScreen = ({ navigation, route }) => {
   if (loading) {
     return (
       <View style={styles.horizontal}>
-        <ActivityIndicator size='large' color='#7654ff' />
+        <ActivityIndicator size='large' color='#000000' />
       </View>
     );
   }
