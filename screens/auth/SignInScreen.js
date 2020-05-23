@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import {
   View,
   Text,
@@ -8,19 +8,31 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  TextInput,
 } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { usernameHandler, passwordHandler } from '../../states/sign-in/actions';
+import {
+  initialState,
+  reducer as signInReducer,
+} from '../../states/sign-in/reducer';
 import { width } from '../../constants/Layout';
 
+const navigationObj = {
+  headerTitle: 'Войти',
+  headerStyle: { backgroundColor: '#000000' },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+};
+
 const SignInScreen = ({ navigation, route }) => {
-  navigation.setOptions({
-    headerTitle: 'Войти',
-    headerStyle: { backgroundColor: '#000000' },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-  });
+  navigation.setOptions(navigationObj);
+  const [signInState, dispatch] = useReducer(signInReducer, initialState);
+  const { username, password } = signInState;
+
+  const signIn = () => {};
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -31,40 +43,34 @@ const SignInScreen = ({ navigation, route }) => {
           <TextInput
             style={styles.input}
             placeholder='Имя пользователя или email'
-            // onChangeText={(text) => dispatch(clientNameHandler(text))}
-            // value={orderState.name}
+            onChangeText={(text) => dispatch(usernameHandler(text))}
+            value={username}
           />
           <TextInput
             style={styles.input}
             secureTextEntry
             placeholder='Пароль'
-            // onChangeText={(text) => dispatch(clientNameHandler(text))}
-            // value={orderState.name}
+            onChangeText={(text) => dispatch(passwordHandler(text))}
+            value={password}
           />
           <View style={styles.button_wrapper}>
             <TouchableOpacity
               style={
-                // !orderState.name ||
-                // !orderState.phone ||
-                // !orderState.date ||
-                // !orderState.availableHour ||
-                // !orderState.comment
-                //   ? styles.button_disabled
-                //   :
-                styles.button
+                !username || !password ? styles.button_disabled : styles.button
               }
-              // onPress={showConfirmAlert}
-              // disabled={
-              //   !orderState.name ||
-              //   !orderState.phone ||
-              //   !orderState.date ||
-              //   !orderState.availableHour ||
-              //   !orderState.comment
-              // }
+              onPress={signIn}
+              disabled={!username || !password}
             >
               <Text style={styles.button_text}>Войти</Text>
             </TouchableOpacity>
           </View>
+          <Text style={styles.no_account_text}>У вас еще нет аккаунта?</Text>
+          <Text
+            style={styles.signUp_text}
+            onPress={() => navigation.navigate('SignUp')}
+          >
+            Зарегистрироваться
+          </Text>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -117,6 +123,14 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontSize: 16,
     fontWeight: '600',
+  },
+  no_account_text: {
+    fontSize: 16,
+  },
+  signUp_text: {
+    fontSize: 16,
+    color: '#0095f6',
+    marginTop: 20,
   },
 });
 
