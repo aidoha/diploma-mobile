@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   Platform,
   StatusBar,
@@ -8,6 +8,7 @@ import {
   View,
   AppRegistry,
   YellowBox,
+  AsyncStorage,
 } from 'react-native';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -19,6 +20,8 @@ import LinkingConfiguration from './navigation/LinkingConfiguration';
 import CompanyList from './screens/company-list/CompanyListScreen';
 import Company from './screens/company/CompanyScreen';
 import Order from './screens/order/OrderScreen';
+import SignUp from './screens/auth/SignUpScreen';
+import SignIn from './screens/auth/SignInScreen';
 
 YellowBox.ignoreWarnings(['Remote debugger']);
 console.disableYellowBox = true;
@@ -31,6 +34,14 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
+  let token;
+  useEffect(() => {
+    const getToken = async () => {
+      token = await AsyncStorage.getItem('token');
+    };
+    getToken();
+  }, [token]);
+  // console.log('token', token);
 
   if (!isLoadingComplete) {
     return null;
@@ -41,10 +52,19 @@ export default function App() {
           {Platform.OS === 'ios' && <StatusBar barStyle='light-content' />}
           <NavigationContainer linking={LinkingConfiguration}>
             <Stack.Navigator>
-              <Stack.Screen name='Root' component={BottomTabNavigator} />
-              <Stack.Screen name='CompanyList' component={CompanyList} />
-              <Stack.Screen name='Company' component={Company} />
-              <Stack.Screen name='Order' component={Order} />
+              {token ? (
+                <>
+                  <Stack.Screen name='Root' component={BottomTabNavigator} />
+                  <Stack.Screen name='CompanyList' component={CompanyList} />
+                  <Stack.Screen name='Company' component={Company} />
+                  <Stack.Screen name='Order' component={Order} />
+                </>
+              ) : (
+                <>
+                  <Stack.Screen name='SignIn' component={SignIn} />
+                  <Stack.Screen name='SignUp' component={SignUp} />
+                </>
+              )}
             </Stack.Navigator>
           </NavigationContainer>
         </View>
