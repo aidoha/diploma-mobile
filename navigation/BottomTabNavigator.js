@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as React from 'react';
 import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import CatalogScreen from '../screens/catalog/CatalogScreen';
+import ProfileScreen from '../screens/profile/ProfileScreen';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Catalog';
@@ -22,8 +23,8 @@ export default function BottomTabNavigator({ navigation, route }) {
   return (
     <BottomTab.Navigator
       tabBarOptions={{
-        activeTintColor: '#8282ff',
-        inactiveTintColor: '#000000',
+        activeTintColor: '#000000',
+        inactiveTintColor: 'grey',
         activeBackgroundColor: '#fff',
         inactiveBackgroundColor: '#fff',
       }}
@@ -39,16 +40,16 @@ export default function BottomTabNavigator({ navigation, route }) {
           ),
         }}
       />
-      {/* <BottomTab.Screen
-        name='CompanyList'
-        component={CompanyListScreen}
+      <BottomTab.Screen
+        name='Profile'
+        component={ProfileScreen}
         options={{
           title: 'Профиль',
           tabBarIcon: ({ color }) => (
             <MaterialIcons color={color} name='person' size={24} />
           ),
         }}
-      /> */}
+      />
     </BottomTab.Navigator>
   );
 }
@@ -60,5 +61,7 @@ function getHeaderTitle(route) {
   switch (routeName) {
     case 'Catalog':
       return 'Каталог';
+    case 'Profile':
+      return 'Профиль';
   }
 }

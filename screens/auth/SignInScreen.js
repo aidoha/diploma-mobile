@@ -101,7 +101,7 @@ const SignInScreen = ({ navigation, route }) => {
           <Text style={styles.no_account_text}>У вас еще нет аккаунта?</Text>
           <Text
             style={styles.signUp_text}
-            onPress={() => navigation.navigate('SignUp')}
+            onPress={() => navigation.navigate('CompanyList')}
           >
             Зарегистрироваться
           </Text>

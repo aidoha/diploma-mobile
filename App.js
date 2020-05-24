@@ -31,6 +31,7 @@ const client = new ApolloClient({
   cache,
 });
 const Stack = createStackNavigator();
+export const AppContext = React.createContext();
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -42,41 +43,42 @@ export default function App() {
     };
     getToken();
   }, []);
-  console.log('token', token);
 
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
       <ApolloProvider client={client}>
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle='light-content' />}
-          <NavigationContainer linking={LinkingConfiguration}>
-            <Stack.Navigator>
-              {token ? (
-                <>
-                  <Stack.Screen name='Root' component={BottomTabNavigator} />
-                  <Stack.Screen name='CompanyList' component={CompanyList} />
-                  <Stack.Screen name='Company' component={Company} />
-                  <Stack.Screen name='Order' component={Order} />
-                </>
-              ) : (
-                <>
-                  <Stack.Screen
-                    name='SignIn'
-                    options={{ headerLeft: null }}
-                    component={SignIn}
-                  />
-                  <Stack.Screen
-                    name='SignUp'
-                    options={{ headerLeft: null }}
-                    component={SignUp}
-                  />
-                </>
-              )}
-            </Stack.Navigator>
-          </NavigationContainer>
-        </View>
+        <AppContext.Provider value={{ token, setToken }}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle='light-content' />}
+            <NavigationContainer linking={LinkingConfiguration}>
+              <Stack.Navigator token={token}>
+                {token ? (
+                  <>
+                    <Stack.Screen name='Root' component={BottomTabNavigator} />
+                    <Stack.Screen name='CompanyList' component={CompanyList} />
+                    <Stack.Screen name='Company' component={Company} />
+                    <Stack.Screen name='Order' component={Order} />
+                  </>
+                ) : (
+                  <>
+                    <Stack.Screen
+                      name='SignIn'
+                      options={{ headerLeft: null }}
+                      component={SignIn}
+                    />
+                    <Stack.Screen
+                      name='SignUp'
+                      options={{ headerLeft: null }}
+                      component={SignUp}
+                    />
+                  </>
+                )}
+              </Stack.Navigator>
+            </NavigationContainer>
+          </View>
+        </AppContext.Provider>
       </ApolloProvider>
     );
   }

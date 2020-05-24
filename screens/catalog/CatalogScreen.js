@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_BUSINESS_CATEGORIES } from '../../queries/catalog';
 import CategoryItem from '../../components/category-item';
@@ -18,10 +17,6 @@ export default function CatalogScreen(props) {
 
   return (
     <View style={styles.container}>
-      {/* <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      > */}
       {!loading &&
         data?.getBusinessCategories.map((category) => (
           <CategoryItem
@@ -30,7 +25,6 @@ export default function CatalogScreen(props) {
             {...props}
           />
         ))}
-      {/* </ScrollView> */}
     </View>
   );
 }
