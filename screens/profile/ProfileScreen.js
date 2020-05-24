@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import {
@@ -32,6 +33,23 @@ const ProfileScreen = ({ navigation }) => {
     skip: !customerEmail,
   });
 
+  const logoutAlertHandler = () => {
+    Alert.alert('Вы действительно хотите выйти?', '', [
+      {
+        text: 'Отменить',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      { text: 'Выйти', onPress: () => logoutHandler() },
+    ]);
+  };
+
+  const logoutHandler = async () => {
+    await SecureStore.deleteItemAsync('token').then(() => {
+      context.setToken(false);
+    });
+  };
+
   if (loading) {
     return (
       <View style={styles.horizontal}>
@@ -39,7 +57,7 @@ const ProfileScreen = ({ navigation }) => {
       </View>
     );
   }
-  console.log('navigation', navigation);
+
   return (
     <View style={styles.container}>
       <View style={styles.helloContainer}>
@@ -54,7 +72,7 @@ const ProfileScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.row_profile}>
           <View style={{ flexDirection: 'row' }}>
             <Feather name='shopping-bag' size={24} color='#fff' />
-            <Text style={styles.text}>Мои заказы</Text>
+            <Text style={styles.text}>Мои записи</Text>
           </View>
           <Ionicons name='ios-arrow-forward' size={24} color='#fff' />
         </TouchableOpacity>
@@ -68,11 +86,7 @@ const ProfileScreen = ({ navigation }) => {
 
         <TouchableOpacity
           style={styles.logout_wrapper}
-          onPress={async () => {
-            await SecureStore.deleteItemAsync('token').then(() => {
-              context.setToken(false);
-            });
-          }}
+          onPress={logoutAlertHandler}
         >
           <AntDesign name='logout' size={24} color='#fff' />
           <Text style={styles.text}>Выйти</Text>

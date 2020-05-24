@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import {
   View,
@@ -21,6 +21,7 @@ import {
 } from '../../states/sign-in/reducer';
 import { width } from '../../constants/Layout';
 import { CUSTOMER_SIGN_IN } from '../../queries/auth';
+import { AppContext } from '../../App';
 
 const navigationObj = {
   headerTitle: 'Войти',
@@ -33,6 +34,7 @@ const navigationObj = {
 
 const SignInScreen = ({ navigation, route }) => {
   navigation.setOptions(navigationObj);
+  const context = useContext(AppContext);
   const [signInState, dispatch] = useReducer(signInReducer, initialState);
   const { username, password } = signInState;
   const [getCustomerToken, { loading, error }] = useMutation(CUSTOMER_SIGN_IN);
@@ -46,10 +48,9 @@ const SignInScreen = ({ navigation, route }) => {
     })
       .then(async (res) => {
         if (res.data) {
-          await SecureStore.setItemAsync(
-            'token',
-            res.data.createCustomerToken.token.accessToken
-          );
+          const token = res.data.createCustomerToken.token.accessToken;
+          await SecureStore.setItemAsync('token', token);
+          await context.setToken(token);
         }
       })
       .catch((err) => {

@@ -53,7 +53,7 @@ export default function App() {
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle='light-content' />}
             <NavigationContainer linking={LinkingConfiguration}>
-              <Stack.Navigator token={token}>
+              <Stack.Navigator>
                 {token ? (
                   <>
                     <Stack.Screen name='Root' component={BottomTabNavigator} />
