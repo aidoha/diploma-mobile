@@ -14,11 +14,11 @@ import {
   Alert,
 } from 'react-native';
 import { useMutation } from '@apollo/react-hooks';
-import { usernameHandler, passwordHandler } from '../../states/sign-in/actions';
+import { usernameHandler, passwordHandler } from '../../states/auth/actions';
 import {
   initialState,
-  reducer as signInReducer,
-} from '../../states/sign-in/reducer';
+  reducer as authReducer,
+} from '../../states/auth/reducer';
 import { width } from '../../constants/Layout';
 import { CUSTOMER_SIGN_IN } from '../../queries/auth';
 import { AppContext } from '../../App';
@@ -32,12 +32,12 @@ const navigationObj = {
   },
 };
 
-const SignInScreen = ({ navigation, route }) => {
+const SignInScreen = ({ navigation }) => {
   navigation.setOptions(navigationObj);
   const context = useContext(AppContext);
-  const [signInState, dispatch] = useReducer(signInReducer, initialState);
-  const { username, password } = signInState;
-  const [getCustomerToken, { loading, error }] = useMutation(CUSTOMER_SIGN_IN);
+  const [authState, dispatch] = useReducer(authReducer, initialState);
+  const { username, password } = authState;
+  const [getCustomerToken, { loading }] = useMutation(CUSTOMER_SIGN_IN);
 
   const onSubmit = () => {
     getCustomerToken({
@@ -102,7 +102,7 @@ const SignInScreen = ({ navigation, route }) => {
           <Text style={styles.no_account_text}>У вас еще нет аккаунта?</Text>
           <Text
             style={styles.signUp_text}
-            onPress={() => navigation.navigate('CompanyList')}
+            onPress={() => navigation.navigate('SignUp')}
           >
             Зарегистрироваться
           </Text>

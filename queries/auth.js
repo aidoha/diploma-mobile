@@ -9,3 +9,29 @@ export const CUSTOMER_SIGN_IN = gql`
     }
   }
 `;
+
+export const CUSTOMER_SIGN_UP = gql`
+  mutation CreateCustomer(
+    $customerFirstName: String!
+    $customerSecondName: String!
+    $customerEmail: String!
+    $customerPassword: String!
+    $customerPhoneNumber: String!
+    $customerPhoneNumberPrefix: String!
+  ) {
+    createCustomer(
+      input: {
+        customerFirstName: $customerFirstName
+        customerSecondName: $customerSecondName
+        customerEmail: $customerEmail
+        customerPassword: $customerPassword
+        customerPhoneNumberPrefix: $customerPhoneNumberPrefix
+        customerPhoneNumber: $customerPhoneNumber
+      }
+    ) {
+      token {
+        accessToken
+      }
+    }
+  }
+`;
