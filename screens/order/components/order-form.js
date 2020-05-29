@@ -12,6 +12,7 @@ import {
 import { TextInputMask } from 'react-native-masked-text';
 import DatePicker from 'react-native-datepicker';
 import AvailableHour from './available-hour';
+import withCurrentUser from '../../../hoc/withCurrentUser';
 import {
   reducer as orderStateReducer,
   initialState,
@@ -30,7 +31,7 @@ import {
 } from '../../../queries/order';
 import { parseDate, parsePhone } from '../../../utils';
 
-const OrderForm = ({ companyServiceID, navigation }) => {
+const OrderForm = ({ companyServiceID, navigation, currentUser }) => {
   const [activeHour, setActiveHour] = useState(null);
   const [isDateChanged, setIsDateChanged] = useState(false);
   const [orderState, dispatch] = useReducer(orderStateReducer, initialState);
@@ -69,6 +70,7 @@ const OrderForm = ({ companyServiceID, navigation }) => {
       clientPhoneNumber: parsePhone(orderState.phone),
       clientPhoneNumberPrefix: '+7',
       clientCommentary: orderState.comment,
+      clientID: currentUser?.customerID,
     };
 
     createBusinessServiceOrder({ variables: obj })
@@ -95,6 +97,8 @@ const OrderForm = ({ companyServiceID, navigation }) => {
       );
     }
   }, [isDateChanged, dataAvailableHours]);
+
+  console.log('dataAvailableHours', dataAvailableHours);
 
   return (
     <View style={styles.container}>
@@ -256,4 +260,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderForm;
+export default withCurrentUser(OrderForm);

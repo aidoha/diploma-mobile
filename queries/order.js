@@ -19,11 +19,12 @@ export const CREATE_BUSINESS_SERVICE_ORDER = gql`
     $clientPhoneNumber: String!
     $clientPhoneNumberPrefix: String!
     $clientCommentary: String!
+    $clientID: ID!
   ) {
     createBusinessServiceOrder(
       input: {
         businessServiceID: $businessServiceID
-        clientID: 1
+        clientID: $clientID
         startAt: $startAt
         prePaid: false
         clientFirstName: $clientFirstName
