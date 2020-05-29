@@ -55,6 +55,7 @@ const withCurrentUser = (Component) => {
       <Component
         {...props}
         currentUser={currentUser?.getCustomerByEmail?.customer}
+        userEmail={tokenInfo?.getCustomerTokenInfo?.email}
       />
     );
   };

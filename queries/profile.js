@@ -23,3 +23,33 @@ export const GET_CUSTOMER_INFO = gql`
     }
   }
 `;
+
+export const GET_CUSTOMER_ORDERS = gql`
+  query getCustomerOrdersByEmail(
+    $email: String!
+    # $pagination: PaginationInput!
+    $limit: Int!
+    $offset: Int!
+  ) {
+    getBusinessServiceOrdersByEmail(
+      input: { email: $email, pagination: { limit: $limit, offset: $offset } }
+    ) {
+      businessServicesOrders {
+        businessServiceID
+        createdAt
+        businessServiceOrderID
+        endAt
+        startAt
+        clientCommentary
+        clientPhoneNumber
+        clientPhoneNumberPrefix
+        clientFirstName
+      }
+      pagination {
+        limit
+        offset
+        count
+      }
+    }
+  }
+`;

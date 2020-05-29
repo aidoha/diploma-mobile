@@ -69,7 +69,10 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.dataContainer}>
         <Text style={styles.title}>Учетная запись</Text>
 
-        <TouchableOpacity style={styles.row_profile}>
+        <TouchableOpacity
+          style={styles.row_profile}
+          onPress={() => navigation.navigate('OrderHistory')}
+        >
           <View style={{ flexDirection: 'row' }}>
             <Feather name='shopping-bag' size={24} color='#fff' />
             <Text style={styles.text}>Мои записи</Text>

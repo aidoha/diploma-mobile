@@ -13,13 +13,13 @@ import {
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-
 import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
 import CompanyList from './screens/company-list/CompanyListScreen';
 import Company from './screens/company/CompanyScreen';
 import Order from './screens/order/OrderScreen';
+import OrderHistory from './screens/profile/components/order-history';
 import SignUp from './screens/auth/SignUpScreen';
 import SignIn from './screens/auth/SignInScreen';
 
@@ -60,6 +60,11 @@ export default function App() {
                     <Stack.Screen name='CompanyList' component={CompanyList} />
                     <Stack.Screen name='Company' component={Company} />
                     <Stack.Screen name='Order' component={Order} />
+                    <Stack.Screen
+                      name='OrderHistory'
+                      component={OrderHistory}
+                      // options={{ headerBackTitle }}
+                    />
                   </>
                 ) : (
                   <>
