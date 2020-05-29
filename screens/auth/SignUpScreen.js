@@ -2,9 +2,7 @@ import React, { useReducer, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import {
   View,
-  Text,
   StyleSheet,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
@@ -18,7 +16,7 @@ import {
   reducer as authReducer,
 } from '../../states/auth/reducer';
 import SignUpInputs from './components/sign-up-inputs';
-import { width } from '../../constants/Layout';
+import AuthBtns from './components/auth-btns';
 import { CUSTOMER_SIGN_UP } from '../../queries/auth';
 import { AppContext } from '../../App';
 import { parsePhone } from '../../utils';
@@ -80,7 +78,12 @@ const SignUpScreen = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.form}>
           <SignUpInputs dispatch={dispatch} authState={authState} />
-          
+          <AuthBtns
+            type='signUp'
+            navigation={navigation}
+            onSubmit={onSubmit}
+            authState={authState}
+          />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -103,39 +106,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  button_wrapper: {
-    width: width * 0.8,
-  },
-  button_disabled: {
-    marginBottom: 30,
-    marginTop: 30,
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: 'grey',
-    alignItems: 'center',
-  },
-  button: {
-    marginBottom: 30,
-    marginTop: 30,
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: '#000',
-    alignItems: 'center',
-  },
-  button_text: {
-    color: '#fff',
-    textTransform: 'uppercase',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  no_account_text: {
-    fontSize: 16,
-  },
-  signIn_text: {
-    fontSize: 16,
-    color: '#0095f6',
-    marginTop: 20,
   },
 });
 

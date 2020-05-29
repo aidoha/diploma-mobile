@@ -2,9 +2,7 @@ import React, { useReducer, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import {
   View,
-  Text,
   StyleSheet,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
@@ -14,6 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import { useMutation } from '@apollo/react-hooks';
+import AuthBtns from './components/auth-btns';
 import { usernameHandler, passwordHandler } from '../../states/auth/actions';
 import {
   initialState,
@@ -88,24 +87,12 @@ const SignInScreen = ({ navigation }) => {
             onChangeText={(text) => dispatch(passwordHandler(text))}
             value={password}
           />
-          <View style={styles.button_wrapper}>
-            <TouchableOpacity
-              style={
-                !username || !password ? styles.button_disabled : styles.button
-              }
-              onPress={onSubmit}
-              disabled={!username || !password}
-            >
-              <Text style={styles.button_text}>Войти</Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.no_account_text}>У вас еще нет аккаунта?</Text>
-          <Text
-            style={styles.signUp_text}
-            onPress={() => navigation.navigate('SignUp')}
-          >
-            Зарегистрироваться
-          </Text>
+          <AuthBtns
+            type='signIn'
+            navigation={navigation}
+            onSubmit={onSubmit}
+            authState={authState}
+          />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -140,39 +127,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     width: width * 0.8,
-  },
-  button_wrapper: {
-    width: width * 0.8,
-  },
-  button_disabled: {
-    marginBottom: 30,
-    marginTop: 30,
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: 'grey',
-    alignItems: 'center',
-  },
-  button: {
-    marginBottom: 30,
-    marginTop: 30,
-    padding: 20,
-    borderRadius: 10,
-    backgroundColor: '#000',
-    alignItems: 'center',
-  },
-  button_text: {
-    color: '#fff',
-    textTransform: 'uppercase',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  no_account_text: {
-    fontSize: 16,
-  },
-  signUp_text: {
-    fontSize: 16,
-    color: '#0095f6',
-    marginTop: 20,
   },
 });
 
