@@ -41,6 +41,7 @@ export default function CompanyListScreen({ route, navigation }) {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
         showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       >
         {!loading &&
           data?.getBusinessCompaniesUnderCategory?.businessCompanies.map(

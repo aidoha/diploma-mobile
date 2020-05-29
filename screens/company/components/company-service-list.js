@@ -9,6 +9,7 @@ const CompanyServices = ({ data }) => {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
       showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
     >
       {data &&
         data.map((item) => {

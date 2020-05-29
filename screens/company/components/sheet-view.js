@@ -31,6 +31,7 @@ const SheetView = ({ refRBSheet, handleSheetView, services, navigation }) => {
           style={styles.scrollview}
           contentContainerStyle={styles.contentScrollview}
           showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         >
           {services &&
             services.map((item) => {

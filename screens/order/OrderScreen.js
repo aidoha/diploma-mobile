@@ -47,6 +47,7 @@ const OrderScreen = ({ navigation, route }) => {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
         showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       >
         <ServiceDetails data={data?.getCompanyService} />
         <OrderForm
