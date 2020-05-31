@@ -54,9 +54,23 @@ const OrderHistory = ({ navigation, userEmail: email }) => {
       <FlatList
         data={data?.getBusinessServiceOrdersByEmail?.businessServicesOrders}
         renderItem={({ item }) => (
-          <Text style={styles.item}>
-            {format(new Date(item.startAt), 'HH:mm')}
-          </Text>
+          <View style={styles.item} key={item.businessServiceID}>
+            <Text style={[styles.title]}>{'Company name'}</Text>
+            <Text style={[styles.text, { fontSize: 18, marginTop: 5 }]}>
+              {item.businessServiceName}
+            </Text>
+            <View style={styles.row}>
+              <View>
+                <Text style={[styles.text, { marginTop: 5, marginBottom: 5 }]}>
+                  {format(new Date(item.startAt), 'HH:mm')}
+                </Text>
+                <Text style={[styles.text, { marginTop: 5, marginBottom: 5 }]}>
+                  {format(new Date(item.startAt), 'dd.MM.yyyy')}
+                </Text>
+              </View>
+              <Text style={styles.text}>{'price'}</Text>
+            </View>
+          </View>
         )}
         ItemSeparatorComponent={renderSeparator}
       />
@@ -78,8 +92,20 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 20,
-    fontSize: 18,
+  },
+  title: {
     color: '#fff',
+    fontSize: 24,
+  },
+  text: {
+    color: '#b3b3b3',
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
   },
 });
 
