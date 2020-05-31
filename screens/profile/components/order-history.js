@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
+import { format } from 'date-fns';
 import { useQuery } from '@apollo/react-hooks';
 import withCurrentUser from '../../../hoc/withCurrentUser';
 import { GET_CUSTOMER_ORDERS } from '../../../queries/profile';
-import {
-  convertUTCDateToLocalDate,
-  jsCoreDateCreator,
-} from '../../../utils/index';
-import { format } from 'date-fns';
 
 const navigationObj = {
   headerTitle: 'Ваши записи Cactus',
@@ -24,22 +21,39 @@ const navigationObj = {
   },
 };
 
+const renderSeparator = () => (
+  <View
+    style={{
+      height: 1,
+      width: '100%',
+      backgroundColor: '#fff',
+    }}
+  />
+);
+
 const OrderHistory = ({ navigation, userEmail: email }) => {
   navigation.setOptions(navigationObj);
-  const { data, loading } = useQuery(GET_CUSTOMER_ORDERS, {
+  const { data, loading, refetch, fetchMore } = useQuery(GET_CUSTOMER_ORDERS, {
     variables: { email, limit: 10, offset: 0 },
   });
-  const renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '100%',
-          backgroundColor: '#fff',
-        }}
-      />
-    );
-  };
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    setTimeout(() => {
+      refetch().then(() => setRefreshing(false));
+    }, 2000);
+  }, [refreshing]);
+
+  const renderRefreshControl = () => (
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      style={{ backgroundColor: 'transparent' }}
+      tintColor='#fff'
+    />
+  );
 
   if (loading) {
     return (
@@ -53,10 +67,20 @@ const OrderHistory = ({ navigation, userEmail: email }) => {
     <View style={styles.container}>
       <FlatList
         data={data?.getBusinessServiceOrdersByEmail?.businessServicesOrders}
+        refreshControl={renderRefreshControl()}
+        onEndReached={() => {
+          fetchMore({
+            variables: {
+              offset:
+                data?.getBusinessServiceOrdersByEmail?.businessServicesOrders
+                  .feed.length,
+            },
+          });
+        }}
         renderItem={({ item }) => (
           <View style={styles.item} key={item.businessServiceID}>
             <Text style={[styles.title]}>{'Company name'}</Text>
-            <Text style={[styles.text, { fontSize: 18, marginTop: 5 }]}>
+            <Text style={[styles.text, { fontSize: 20, marginTop: 10 }]}>
               {item.businessServiceName}
             </Text>
             <View style={styles.row}>
@@ -83,6 +107,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
+  scrollView: {
+    flex: 1,
+  },
   horizontal: {
     flex: 1,
     backgroundColor: '#000',
@@ -99,6 +126,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#b3b3b3',
+    fontSize: 18,
   },
   row: {
     display: 'flex',
