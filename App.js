@@ -15,7 +15,6 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
-import LinkingConfiguration from './navigation/LinkingConfiguration';
 import CompanyList from './screens/company-list/CompanyListScreen';
 import Company from './screens/company/CompanyScreen';
 import Order from './screens/order/OrderScreen';
@@ -27,7 +26,7 @@ YellowBox.ignoreWarnings(['Remote debugger']);
 console.disableYellowBox = true;
 const cache = new InMemoryCache();
 const client = new ApolloClient({
-  uri: 'https://46.101.138.224:8080/query',
+  uri: 'http://46.101.138.224:9090/query',
   cache,
 });
 const Stack = createStackNavigator();
@@ -52,7 +51,7 @@ export default function App() {
         <AppContext.Provider value={{ token, setToken }}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle='light-content' />}
-            <NavigationContainer linking={LinkingConfiguration}>
+            <NavigationContainer>
               <Stack.Navigator>
                 {token ? (
                   <>
@@ -63,7 +62,6 @@ export default function App() {
                     <Stack.Screen
                       name='OrderHistory'
                       component={OrderHistory}
-                      // options={{ headerBackTitle }}
                     />
                   </>
                 ) : (
