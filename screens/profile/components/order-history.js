@@ -12,6 +12,7 @@ import { useQuery } from '@apollo/react-hooks';
 import withCurrentUser from '../../../hoc/withCurrentUser';
 import { GET_CUSTOMER_ORDERS } from '../../../queries/profile';
 import { validPrice } from '../../../utils/index';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const navigationObj = {
   headerTitle: 'Ваши записи Cactus',
@@ -57,6 +58,37 @@ const OrderHistory = ({ navigation, userEmail: email }) => {
     />
   );
 
+  const handleLoadMore = () => {
+    setBottomLoader(true);
+
+    fetchMore({
+      variables: {
+        offset:
+          data?.getBusinessServiceOrdersByEmail?.businessServicesOrders.length,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (
+          !fetchMoreResult?.getBusinessServiceOrdersByEmail
+            ?.businessServicesOrders
+        ) {
+          return prev;
+        }
+        setBottomLoader(false);
+        return {
+          ...prev,
+          getBusinessServiceOrdersByEmail: {
+            ...prev.getBusinessServiceOrdersByEmail,
+            businessServicesOrders: [
+              ...prev?.getBusinessServiceOrdersByEmail?.businessServicesOrders,
+              ...fetchMoreResult?.getBusinessServiceOrdersByEmail
+                ?.businessServicesOrders,
+            ],
+          },
+        };
+      },
+    });
+  };
+
   if (loading) {
     return (
       <View style={styles.horizontal}>
@@ -65,42 +97,11 @@ const OrderHistory = ({ navigation, userEmail: email }) => {
     );
   }
 
-  console.log(
-    data?.getBusinessServiceOrdersByEmail?.businessServicesOrders.length
-  );
-
   return (
     <View style={styles.container}>
       <FlatList
         data={data?.getBusinessServiceOrdersByEmail?.businessServicesOrders}
         refreshControl={renderRefreshControl()}
-        onEndReached={() => {
-          setBottomLoader(true);
-          fetchMore({
-            variables: {
-              offset:
-                data?.getBusinessServiceOrdersByEmail?.businessServicesOrders
-                  .length,
-            },
-            updateQuery: (prev, { fetchMoreResult }) => {
-              if (!fetchMoreResult) return prev;
-              // console.log('fetchMoreResult', fetchMoreResult);
-              setBottomLoader(false);
-              return {
-                ...prev,
-                getBusinessServiceOrdersByEmail: {
-                  ...prev.getBusinessServiceOrdersByEmail,
-                  businessServicesOrders: [
-                    ...prev?.getBusinessServiceOrdersByEmail
-                      ?.businessServicesOrders,
-                    ...fetchMoreResult?.getBusinessServiceOrdersByEmail
-                      ?.businessServicesOrders,
-                  ],
-                },
-              };
-            },
-          });
-        }}
         renderItem={({ item }) => (
           <View style={styles.item} key={item.businessServiceID}>
             <View style={styles.row}>
@@ -122,10 +123,15 @@ const OrderHistory = ({ navigation, userEmail: email }) => {
         )}
         ItemSeparatorComponent={renderSeparator}
       />
-      {bottomLoader && (
+
+      {bottomLoader ? (
         <View style={styles.horizontal}>
           <ActivityIndicator size='large' color='#fff' />
         </View>
+      ) : (
+        <TouchableOpacity onPress={handleLoadMore} style={styles.loadMore}>
+          <Text style={styles.loadMoreText}>Еще</Text>
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -135,9 +141,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-  },
-  scrollView: {
-    flex: 1,
   },
   horizontal: {
     flex: 1,
@@ -163,6 +166,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 10,
+  },
+  loadMore: {
+    backgroundColor: '#fff',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 20,
+    margin: 20,
+  },
+  loadMoreText: {
+    color: '#000',
+    fontSize: 20,
   },
 });
 
