@@ -98,8 +98,6 @@ const OrderForm = ({ companyServiceID, navigation, currentUser }) => {
     }
   }, [isDateChanged, dataAvailableHours]);
 
-  console.log('currentUser', currentUser);
-
   return (
     <View style={styles.container}>
       <TextInput

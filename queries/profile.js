@@ -45,6 +45,8 @@ export const GET_CUSTOMER_ORDERS = gql`
         clientPhoneNumberPrefix
         clientFirstName
         businessServiceName
+        businessCompanyName
+        price
       }
       pagination {
         limit

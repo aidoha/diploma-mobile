@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { useQuery } from '@apollo/react-hooks';
 import withCurrentUser from '../../../hoc/withCurrentUser';
 import { GET_CUSTOMER_ORDERS } from '../../../queries/profile';
+import { validPrice } from '../../../utils/index';
 
 const navigationObj = {
   headerTitle: 'Ваши записи Cactus',
@@ -34,9 +35,10 @@ const renderSeparator = () => (
 const OrderHistory = ({ navigation, userEmail: email }) => {
   navigation.setOptions(navigationObj);
   const { data, loading, refetch, fetchMore } = useQuery(GET_CUSTOMER_ORDERS, {
-    variables: { email, limit: 10, offset: 0 },
+    variables: { email, limit: 5, offset: 0 },
   });
   const [refreshing, setRefreshing] = useState(false);
+  const [bottomLoader, setBottomLoader] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -63,41 +65,68 @@ const OrderHistory = ({ navigation, userEmail: email }) => {
     );
   }
 
+  console.log(
+    data?.getBusinessServiceOrdersByEmail?.businessServicesOrders.length
+  );
+
   return (
     <View style={styles.container}>
       <FlatList
         data={data?.getBusinessServiceOrdersByEmail?.businessServicesOrders}
         refreshControl={renderRefreshControl()}
         onEndReached={() => {
+          setBottomLoader(true);
           fetchMore({
             variables: {
               offset:
                 data?.getBusinessServiceOrdersByEmail?.businessServicesOrders
-                  .feed.length,
+                  .length,
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              if (!fetchMoreResult) return prev;
+              // console.log('fetchMoreResult', fetchMoreResult);
+              setBottomLoader(false);
+              return {
+                ...prev,
+                getBusinessServiceOrdersByEmail: {
+                  ...prev.getBusinessServiceOrdersByEmail,
+                  businessServicesOrders: [
+                    ...prev?.getBusinessServiceOrdersByEmail
+                      ?.businessServicesOrders,
+                    ...fetchMoreResult?.getBusinessServiceOrdersByEmail
+                      ?.businessServicesOrders,
+                  ],
+                },
+              };
             },
           });
         }}
         renderItem={({ item }) => (
           <View style={styles.item} key={item.businessServiceID}>
-            <Text style={[styles.title]}>{'Company name'}</Text>
+            <View style={styles.row}>
+              <Text style={[styles.title]}>{item.businessCompanyName}</Text>
+              <Text style={[styles.text, { marginTop: 5, marginBottom: 5 }]}>
+                {format(new Date(item.startAt), 'HH:mm')}
+              </Text>
+            </View>
             <Text style={[styles.text, { fontSize: 20, marginTop: 10 }]}>
               {item.businessServiceName}
             </Text>
             <View style={styles.row}>
-              <View>
-                <Text style={[styles.text, { marginTop: 5, marginBottom: 5 }]}>
-                  {format(new Date(item.startAt), 'HH:mm')}
-                </Text>
-                <Text style={[styles.text, { marginTop: 5, marginBottom: 5 }]}>
-                  {format(new Date(item.startAt), 'dd.MM.yyyy')}
-                </Text>
-              </View>
-              <Text style={styles.text}>{'price'}</Text>
+              <Text style={[styles.text, { marginTop: 5, marginBottom: 5 }]}>
+                {format(new Date(item.startAt), 'dd.MM.yyyy')}
+              </Text>
+              <Text style={styles.text}>{validPrice(item.price)} ₸</Text>
             </View>
           </View>
         )}
         ItemSeparatorComponent={renderSeparator}
       />
+      {bottomLoader && (
+        <View style={styles.horizontal}>
+          <ActivityIndicator size='large' color='#fff' />
+        </View>
+      )}
     </View>
   );
 };
