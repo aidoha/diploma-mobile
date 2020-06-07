@@ -6,7 +6,7 @@ import CompanyInfo from './components/company-info';
 import CompanyServices from './components/company-service-list';
 import SheetView from './components/sheet-view';
 import { width } from '../../constants/Layout';
-import { GET_COMPANY_SERVICES } from '../../queries/company';
+import { GET_COMPANY_SERVICES, GET_COMPANY } from '../../queries/company';
 
 const renderTabBar = (props) => (
   <TabBar
@@ -35,6 +35,14 @@ export default function CompanyScreen({ route, navigation }) {
     },
   });
 
+  const { data, loading } = useQuery(GET_COMPANY_SERVICES, {
+    variables: { businessCompanyID },
+  });
+
+  const { data: companyData } = useQuery(GET_COMPANY, {
+    variables: { businessCompanyID },
+  });
+
   const handleSheetView = () => {
     setSheetView(!sheetView);
   };
@@ -42,7 +50,7 @@ export default function CompanyScreen({ route, navigation }) {
   const renderScene = SceneMap({
     first: () => (
       <CompanyInfo
-        data={route.params}
+        data={companyData?.getBusinessCompany}
         refRBSheet={refRBSheet}
         handleSheetView={handleSheetView}
       />
@@ -54,10 +62,6 @@ export default function CompanyScreen({ route, navigation }) {
     ),
   });
 
-  const { data, loading } = useQuery(GET_COMPANY_SERVICES, {
-    variables: { businessCompanyID },
-  });
-
   if (loading) {
     return (
       <View style={styles.horizontal}>
@@ -65,6 +69,11 @@ export default function CompanyScreen({ route, navigation }) {
       </View>
     );
   }
+
+  const image =
+    companyData?.getBusinessCompany?.businessCompanyImages?.[
+      companyData?.getBusinessCompany?.businessCompanyImages?.length - 1
+    ]?.imagePath;
 
   return (
     <View
@@ -74,8 +83,13 @@ export default function CompanyScreen({ route, navigation }) {
       ]}
     >
       <Image
-        style={styles.company_image}
-        source={require('../../assets/images/company.jpg')}
+        // style={styles.company_image}
+        source={{
+          uri:
+            'http://qaqtus.images.ams3.digitaloceanspaces.com/Angels-coding-2.jpg',
+        }}
+        resizeMode={'cover'}
+        style={{ width: 200, height: 200 }}
       />
       <TabView
         navigationState={{ index, routes }}
@@ -110,5 +124,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  company_image: {
+    width: 400,
+    height: 200,
+    // resizeMode: 'contain',
+    // margin: 5,
   },
 });
