@@ -79,13 +79,13 @@ const ProfileScreen = ({ navigation }) => {
           </View>
           <Ionicons name='ios-arrow-forward' size={24} color='#fff' />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.row_profile}>
+        {/* <TouchableOpacity style={styles.row_profile}>
           <View style={{ flexDirection: 'row' }}>
             <MaterialIcons name='person-outline' size={24} color='#fff' />
             <Text style={styles.text}>Моя информация</Text>
           </View>
           <Ionicons name='ios-arrow-forward' size={24} color='#fff' />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={styles.logout_wrapper}
