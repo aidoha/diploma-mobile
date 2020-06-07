@@ -17,9 +17,12 @@ export const GET_COMPANIES = gql`
 `;
 
 export const SEARCH = gql`
-  query search($businessCompanyName: String!) {
+  query search($businessCompanyName: String!, $businessCategoryID: ID!) {
     searchBusinessCompany(
-      input: { businessCompanyName: $businessCompanyName }
+      input: {
+        businessCompanyName: $businessCompanyName
+        businessCategoryID: $businessCategoryID
+      }
     ) {
       businessCompanies {
         businessCompanyID

@@ -32,6 +32,7 @@ export default function CompanyListScreen({ route, navigation }) {
   const { data: searchData } = useQuery(SEARCH, {
     variables: {
       businessCompanyName: searchText,
+      businessCategoryID: categoryID,
     },
     skip: !searchText || !searchEnabled,
   });
