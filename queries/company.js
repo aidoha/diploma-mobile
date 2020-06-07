@@ -14,3 +14,16 @@ export const GET_COMPANY_SERVICES = gql`
     }
   }
 `;
+
+export const GET_COMPANY = gql`
+  query getCompanyServices($businessCompanyID: ID!) {
+    getBusinessCompany(input: { businessCompanyID: $businessCompanyID }) {
+      businessCompanyName
+      businessCompanyAddress
+      businessCompanyImages {
+        imageID
+        imagePath
+      }
+    }
+  }
+`;

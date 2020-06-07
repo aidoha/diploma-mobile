@@ -11,6 +11,11 @@ const CompanyServices = ({ data }) => {
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     >
+      {!data && (
+        <View style={styles.no_service_block}>
+          <Text>К сожалению, услуги в этой компании недоступны</Text>
+        </View>
+      )}
       {data &&
         data.map((item) => {
           const {
@@ -90,6 +95,15 @@ const styles = StyleSheet.create({
   },
   company_image: {
     resizeMode: 'cover',
+  },
+  no_service_block: {
+    margin: 20,
+    padding: 20,
+    borderRadius: 10,
+    flex: 1,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'grey',
   },
 });
 

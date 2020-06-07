@@ -27,6 +27,7 @@ export default function CompanyListScreen({ route, navigation }) {
   const { data, loading } = useQuery(GET_COMPANIES, {
     variables: { categoryID },
   });
+
   if (loading) {
     return (
       <View style={styles.horizontal}>
@@ -46,7 +47,18 @@ export default function CompanyListScreen({ route, navigation }) {
         {!loading &&
           data?.getBusinessCompaniesUnderCategory?.businessCompanies.map(
             (item) => {
-              const { businessCompanyID, businessCompanyName } = item;
+              const {
+                businessCompanyID,
+                businessCompanyName,
+                businessCompanyAddress,
+                businessCompanyImages,
+              } = item;
+              const image =
+                businessCompanyImages?.length > 0
+                  ? {
+                      uri: businessCompanyImages?.[0]?.imagePath,
+                    }
+                  : require('../../assets/images/company.jpg');
               return (
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Company', item)}
@@ -56,11 +68,8 @@ export default function CompanyListScreen({ route, navigation }) {
                     <Text style={styles.company_name}>
                       {businessCompanyName}
                     </Text>
-                    <Image
-                      style={styles.company_image}
-                      source={require('../../assets/images/company.jpg')}
-                    />
-                    <Text>{'address'}</Text>
+                    <Image style={styles.company_image} source={image} />
+                    <Text>{businessCompanyAddress}</Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -105,6 +114,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'left',
     marginBottom: 10,
+    fontWeight: '600',
+    textTransform: 'capitalize'
   },
   company_image: {
     flex: 1,
@@ -112,5 +123,6 @@ const styles = StyleSheet.create({
     height: null,
     resizeMode: 'cover',
     marginBottom: 10,
+    borderRadius: 10
   },
 });

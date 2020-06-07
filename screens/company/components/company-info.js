@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const CompanyInfo = ({ data, refRBSheet, handleSheetView }) => {
+const CompanyInfo = ({ data, refRBSheet }) => {
   return (
     <>
       <View style={styles.scene}>
@@ -11,7 +11,7 @@ const CompanyInfo = ({ data, refRBSheet, handleSheetView }) => {
         </View>
         <View style={styles.row}>
           <Text style={[styles.text]}>Адрес: </Text>
-          <Text style={[styles.text]}>Company Address</Text>
+          <Text style={[styles.text]}>{data?.businessCompanyAddress}</Text>
         </View>
       </View>
       <View style={styles.button_wrapper}>

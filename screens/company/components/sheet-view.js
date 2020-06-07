@@ -33,6 +33,11 @@ const SheetView = ({ refRBSheet, handleSheetView, services, navigation }) => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
         >
+          {!services && (
+            <View style={styles.no_service_block}>
+              <Text>К сожалению, услуги в этой компании недоступны</Text>
+            </View>
+          )}
           {services &&
             services.map((item) => {
               const { companyServiceID, companyServiceName } = item;
@@ -135,6 +140,15 @@ const styles = StyleSheet.create({
   button_choose_text: {
     color: '#fff',
     textTransform: 'uppercase',
+  },
+  no_service_block: {
+    margin: 20,
+    padding: 20,
+    borderRadius: 10,
+    flex: 1,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'grey',
   },
 });
 

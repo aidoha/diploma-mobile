@@ -6,6 +6,11 @@ export const GET_COMPANIES = gql`
       businessCompanies {
         businessCompanyID
         businessCompanyName
+        businessCompanyAddress
+        businessCompanyImages {
+          imageID
+          imagePath
+        }
       }
     }
   }

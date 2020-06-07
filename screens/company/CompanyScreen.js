@@ -6,7 +6,7 @@ import CompanyInfo from './components/company-info';
 import CompanyServices from './components/company-service-list';
 import SheetView from './components/sheet-view';
 import { width } from '../../constants/Layout';
-import { GET_COMPANY_SERVICES } from '../../queries/company';
+import { GET_COMPANY_SERVICES, GET_COMPANY } from '../../queries/company';
 
 const renderTabBar = (props) => (
   <TabBar
@@ -35,6 +35,13 @@ export default function CompanyScreen({ route, navigation }) {
     },
   });
 
+  const { data, loading } = useQuery(GET_COMPANY_SERVICES, {
+    variables: { businessCompanyID },
+  });
+  const { data: companyData } = useQuery(GET_COMPANY, {
+    variables: { businessCompanyID },
+  });
+
   const handleSheetView = () => {
     setSheetView(!sheetView);
   };
@@ -42,9 +49,8 @@ export default function CompanyScreen({ route, navigation }) {
   const renderScene = SceneMap({
     first: () => (
       <CompanyInfo
-        data={route.params}
+        data={companyData?.getBusinessCompany}
         refRBSheet={refRBSheet}
-        handleSheetView={handleSheetView}
       />
     ),
     second: () => (
@@ -52,10 +58,6 @@ export default function CompanyScreen({ route, navigation }) {
         data={data?.getBusinessCompanyServices?.businessCompanyService}
       />
     ),
-  });
-
-  const { data, loading } = useQuery(GET_COMPANY_SERVICES, {
-    variables: { businessCompanyID },
   });
 
   if (loading) {
@@ -66,6 +68,13 @@ export default function CompanyScreen({ route, navigation }) {
     );
   }
 
+  const images = companyData?.getBusinessCompany?.businessCompanyImages;
+  const image =
+    images?.length > 0
+      ? {
+          uri: images?.[0]?.imagePath,
+        }
+      : require('../../assets/images/company.jpg');
   return (
     <View
       style={[
@@ -73,10 +82,7 @@ export default function CompanyScreen({ route, navigation }) {
         sheetView && { opacity: 0.5, backgroundColor: '#000' },
       ]}
     >
-      <Image
-        style={styles.company_image}
-        source={require('../../assets/images/company.jpg')}
-      />
+      <Image style={styles.company_image} source={image} />
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -110,5 +116,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  company_image: {
+    width: width,
+    height: 400,
   },
 });
