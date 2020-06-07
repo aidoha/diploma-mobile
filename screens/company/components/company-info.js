@@ -7,7 +7,7 @@ const CompanyInfo = ({ data, refRBSheet }) => {
       <View style={styles.scene}>
         <View style={styles.row}>
           <Text style={[styles.text]}>Время работы: </Text>
-          <Text style={[styles.text]}>Company duration time</Text>
+          <Text style={[styles.text]}>10:00 - 19:00</Text>
         </View>
         <View style={styles.row}>
           <Text style={[styles.text]}>Адрес: </Text>

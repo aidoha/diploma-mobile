@@ -15,3 +15,21 @@ export const GET_COMPANIES = gql`
     }
   }
 `;
+
+export const SEARCH = gql`
+  query search($businessCompanyName: String!) {
+    searchBusinessCompany(
+      input: { businessCompanyName: $businessCompanyName }
+    ) {
+      businessCompanies {
+        businessCompanyID
+        businessCompanyName
+        businessCompanyImages {
+          imageID
+          imagePath
+        }
+        businessCompanyAddress
+      }
+    }
+  }
+`;
